@@ -1,6 +1,7 @@
 package com.twilio.earthday.earth.pieceone.web;
 
 import com.twilio.earthday.earth.pieceone.model.EcoTask;
+import com.twilio.earthday.earth.pieceone.model.EcoTaskRequest;
 import com.twilio.earthday.earth.pieceone.model.User;
 import com.twilio.earthday.earth.pieceone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class EcoChallengeController {
     }
 
     @PostMapping("/task")
-    public ResponseEntity<EcoTask> createTask(@RequestBody EcoTask task, @RequestBody Long userId) {
-        return new ResponseEntity<>(userService.addEcoTask(task, userId), HttpStatus.CREATED);
+    public ResponseEntity<EcoTask> createTask(@RequestBody EcoTaskRequest ecoTaskRequest) {
+        return new ResponseEntity<>(userService.addEcoTask(ecoTaskRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

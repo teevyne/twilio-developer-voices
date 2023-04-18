@@ -1,6 +1,7 @@
 package com.twilio.earthday.earth.pieceone.service;
 
 import com.twilio.earthday.earth.pieceone.model.EcoTask;
+import com.twilio.earthday.earth.pieceone.model.EcoTaskRequest;
 import com.twilio.earthday.earth.pieceone.model.User;
 import com.twilio.earthday.earth.pieceone.repo.EcoTaskRepository;
 import com.twilio.earthday.earth.pieceone.repo.UserRepository;
@@ -31,9 +32,14 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public EcoTask addEcoTask(EcoTask ecoTask, Long userId) {
-        User user = userRepository.findById(userId).orElse(null);
+    public EcoTask addEcoTask(EcoTaskRequest ecoTaskRequest) {
+        EcoTask ecoTask = new EcoTask();
+        User user = userRepository.findByPhoneNumber(ecoTaskRequest.getUserPhoneNumber());
+        log.info(String.valueOf(user));
+        ecoTask.setTaskName(ecoTaskRequest.getTaskName());
         ecoTask.setUser(user);
+        ecoTask.setCompleted(false);
+        ecoTask.setPhoneNumber(ecoTaskRequest.getUserPhoneNumber());
         return ecoTaskRepository.save(ecoTask);
     }
 
@@ -41,6 +47,7 @@ public class UserService {
         EcoTask ecoTask = ecoTaskRepository.findById(taskId).orElse(null);
         assert ecoTask != null;
         ecoTask.setCompleted(true);
+        log.info(String.valueOf(ecoTask.isCompleted()));
         return ecoTaskRepository.save(ecoTask);
     }
 

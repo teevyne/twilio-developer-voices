@@ -22,7 +22,9 @@ public class EcoTask {
 
     private String taskName;
 
-    private boolean completed;
+    private boolean completed = false;
+
+    private String phoneNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
