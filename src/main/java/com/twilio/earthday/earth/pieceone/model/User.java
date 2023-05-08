@@ -1,12 +1,11 @@
 package com.twilio.earthday.earth.pieceone.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
-
-import javax.persistence.*;
 
 import java.util.List;
 
@@ -28,8 +27,6 @@ public class User {
 
     private String phoneNumber;
 
+    @ElementCollection
     private List<String> followers;
-
-    @OneToMany
-    private List<EcoTask> ecoTasks;
 }

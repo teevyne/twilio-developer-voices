@@ -26,7 +26,7 @@ public class EcoChallengeController {
         return new ResponseEntity<>(userService.addEcoTask(ecoTaskRequest), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/task/{id}")
     public EcoTask completeEcoTask(@PathVariable("id") Long taskId) {
         return userService.completeEcoTask(taskId);
     }

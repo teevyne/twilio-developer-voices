@@ -3,8 +3,8 @@ package com.twilio.earthday.earth.pieceone.service;
 import com.twilio.earthday.earth.pieceone.model.EcoTask;
 import com.twilio.earthday.earth.pieceone.model.EcoTaskRequest;
 import com.twilio.earthday.earth.pieceone.model.User;
-import com.twilio.earthday.earth.pieceone.repo.EcoTaskRepository;
-import com.twilio.earthday.earth.pieceone.repo.UserRepository;
+import com.twilio.earthday.earth.pieceone.repository.EcoTaskRepository;
+import com.twilio.earthday.earth.pieceone.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,6 @@ public class UserService {
         User user = userRepository.findByPhoneNumber(ecoTaskRequest.getUserPhoneNumber());
         log.info(String.valueOf(user));
         ecoTask.setTaskName(ecoTaskRequest.getTaskName());
-        ecoTask.setUser(user);
         ecoTask.setCompleted(false);
         ecoTask.setPhoneNumber(ecoTaskRequest.getUserPhoneNumber());
         return ecoTaskRepository.save(ecoTask);
@@ -54,7 +53,8 @@ public class UserService {
     public void sendTaskUpdates(Long taskId) {
         EcoTask ecoTask = ecoTaskRepository.findById(taskId).orElse(null);
         assert ecoTask != null;
-        User user = ecoTask.getUser();
+        User user = userRepository.findByPhoneNumber(ecoTask.getPhoneNumber());
+
         List<String> followers = user.getFollowers();
         for (String follower : followers) {
             twilioService.sendMessage(follower, "Your friend has completed a task: " + ecoTask.getTaskName());

@@ -1,4 +1,4 @@
-package com.twilio.earthday.earth.pieceone.repo;
+package com.twilio.earthday.earth.pieceone.repository;
 
 import com.twilio.earthday.earth.pieceone.model.EcoTask;
 import org.springframework.data.jpa.repository.JpaRepository;
