@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,5 +29,5 @@ public class User {
     private String phoneNumber;
 
     @ElementCollection
-    private List<String> followers;
+    private List<String> followers = new ArrayList<>();
 }

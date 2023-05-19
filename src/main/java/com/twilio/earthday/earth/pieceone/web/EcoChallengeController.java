@@ -2,6 +2,7 @@ package com.twilio.earthday.earth.pieceone.web;
 
 import com.twilio.earthday.earth.pieceone.model.EcoTask;
 import com.twilio.earthday.earth.pieceone.model.EcoTaskRequest;
+import com.twilio.earthday.earth.pieceone.model.FollowUserRequest;
 import com.twilio.earthday.earth.pieceone.model.User;
 import com.twilio.earthday.earth.pieceone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,21 +38,33 @@ public class EcoChallengeController {
         return ResponseEntity.ok("Task updates sent successfully");
     }
 
-    @PostMapping("/user/{userId}/follower")
-    public ResponseEntity<User> followUser(@PathVariable Long userId, @RequestParam String follower) {
-        User user = userService.followUser(userId, follower);
+    @PostMapping("/user/follower/add")
+    public ResponseEntity<User> followUser(@RequestBody FollowUserRequest followUserRequest) {
+        User user = userService.followUser(followUserRequest);
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/user/{userId}/reminders")
-    public ResponseEntity<String> sendReminders(@PathVariable Long userId) {
-        userService.sendReminders(userId);
-        return ResponseEntity.ok("Reminders sent successfully");
+    @PostMapping("/user/{userId}/notification")
+    public ResponseEntity<?> sendReminders(@PathVariable Long userId) {
+        userService.sendNotificationAndReminders(userId);
+        return ResponseEntity.ok("Notification sent successfully to users' followers");
     }
 
     @PostMapping("/user/{userId}/milestone")
     public ResponseEntity<String> sendMilestoneNotification(@PathVariable Long userId, @RequestBody EcoTask ecoTask) {
         userService.sendMilestoneNotification(userId, ecoTask);
         return ResponseEntity.ok("Milestone notification sent successfully");
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable Long userId) {
+
+        return ResponseEntity.ok(userService.getUser(userId));
+    }
+
+    @GetMapping("/users/")
+    public ResponseEntity<?> getUsers() {
+
+        return ResponseEntity.ok(userService.getUsers());
     }
 }

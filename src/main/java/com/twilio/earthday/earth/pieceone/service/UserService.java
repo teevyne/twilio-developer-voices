@@ -2,6 +2,7 @@ package com.twilio.earthday.earth.pieceone.service;
 
 import com.twilio.earthday.earth.pieceone.model.EcoTask;
 import com.twilio.earthday.earth.pieceone.model.EcoTaskRequest;
+import com.twilio.earthday.earth.pieceone.model.FollowUserRequest;
 import com.twilio.earthday.earth.pieceone.model.User;
 import com.twilio.earthday.earth.pieceone.repository.EcoTaskRepository;
 import com.twilio.earthday.earth.pieceone.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -28,8 +30,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User getUser(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public Optional<User> getUser(Long phoneNumber) {
+        System.out.println(userRepository.findById(phoneNumber));
+        return userRepository.findById(phoneNumber);
+    }
+
+    public List<User> getUsers() {
+//        System.out.println(userRepository.findAll());
+        return userRepository.findAll();
     }
 
     public EcoTask addEcoTask(EcoTaskRequest ecoTaskRequest) {
@@ -61,20 +69,24 @@ public class UserService {
         }
     }
 
-    public User followUser(Long userId, String follower) {
-        User user = userRepository.findById(userId).orElse(null);
+    public User followUser(FollowUserRequest followUserRequest) {
+        User user = userRepository.findById(followUserRequest.getUserId()).orElse(null);
         assert user != null;
-        user.getFollowers().add(follower);
+        user.getFollowers().add(followUserRequest.getFollowerPhoneNumber());
         userRepository.save(user);
 
         return user;
     }
 
-    public void sendReminders(Long userId) {
+    public void sendNotificationAndReminders(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
         assert user != null;
+        String message = "Hello there. Your friend, " + user.getFirstName() + " has completed an " +
+                "EcoTask Challenge. Don't to be a part today!";
+
         for (String follower : user.getFollowers()) {
-            twilioService.sendMessage(follower, "Don't forget to complete your eco-challenges today!");
+            twilioService.sendMessage("+234" + follower.substring(1), message);
+
         }
     }
 
